@@ -9,6 +9,26 @@
         "cloudShellStorageAccountType": {
             "type": "string",
             "defaultValue": "Standard_LRS"
+        },
+        "vnetname": {
+            "type": "string",
+            "defaultValue": "cloudacademynet"
+        },
+        "addressPrefix": {
+            "type": "string",
+            "defaultValue": "10.1.0.0/16"
+        },
+        "subnetName": {
+            "type": "string",
+            "defaultValue": "default"
+        },
+        "subnetAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.1.0.0/24"
+        },
+        "enableDdosProtection": {
+            "type": "bool",
+            "defaultValue": false
         }
     },
     "variables": {
@@ -22,6 +42,28 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "accountType": "[parameters('cloudShellStorageAccountType')]"
+            }
+        },
+        {
+            "apiVersion": "2019-02-01",
+            "name": "[parameters('vnetname')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('addressPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('subnetName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnetAddressPrefix')]"
+                        }
+                    }
+                ],
+                "enableDdosProtection": "[parameters('enableDdosProtection')]"
             }
         }
     ]
