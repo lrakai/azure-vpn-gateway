@@ -42,6 +42,9 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "accountType": "[parameters('cloudShellStorageAccountType')]"
+            },
+            "tags": {
+                "Environment": "Lab"
             }
         },
         {
@@ -64,6 +67,9 @@
                     }
                 ],
                 "enableDdosProtection": "[parameters('enableDdosProtection')]"
+            },
+            "tags": {
+                "Environment": "Lab"
             }
         }
     ]
