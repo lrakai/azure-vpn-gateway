@@ -29,6 +29,18 @@
         "enableDdosProtection": {
             "type": "bool",
             "defaultValue": false
+        },
+        "vnetnameB": {
+            "type": "string",
+            "defaultValue": "Fabrikam"
+        },
+        "addressPrefixB": {
+            "type": "string",
+            "defaultValue": "172.16.128.0/17"
+        },
+        "subnetAddressPrefixB": {
+            "type": "string",
+            "defaultValue": "172.16.129.0/24"
         }
     },
     "variables": {
@@ -63,6 +75,31 @@
                         "name": "[parameters('subnetName')]",
                         "properties": {
                             "addressPrefix": "[parameters('subnetAddressPrefix')]"
+                        }
+                    }
+                ],
+                "enableDdosProtection": "[parameters('enableDdosProtection')]"
+            },
+            "tags": {
+                "Environment": "Lab"
+            }
+        },
+        {
+            "apiVersion": "2019-02-01",
+            "name": "[parameters('vnetnameB')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('addressPrefixB')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('subnetName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnetAddressPrefixB')]"
                         }
                     }
                 ],
