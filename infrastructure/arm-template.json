@@ -12,7 +12,7 @@
         },
         "location": {
             "type": "string",
-            "defaultValue": "uswest"
+            "defaultValue": "westus"
         },
         "vnetName": {
             "type": "string",
@@ -80,7 +80,7 @@
         },
         "locationB": {
             "type": "string",
-            "defaultValue": "useast"
+            "defaultValue": "eastus"
         },
         "vnetNameB": {
             "type": "string",
@@ -196,7 +196,7 @@
             "name": "[parameters('networkInterfaceName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-04-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
                 "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
@@ -227,7 +227,7 @@
             "name": "[parameters('networkSecurityGroupName')]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-08-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "properties": {
                 "securityRules": "[parameters('networkSecurityGroupRules')]"
             },
@@ -240,7 +240,7 @@
             "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-04-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]",
                 "[concat('Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageAccountName'))]"
@@ -291,7 +291,7 @@
             "name": "[variables('diagnosticsStorageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2018-02-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "properties": {},
             "kind": "[parameters('diagnosticsStorageAccountKind')]",
             "sku": {
@@ -332,7 +332,7 @@
             "name": "[parameters('networkInterfaceNameB')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2018-10-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('locationB')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupNameB'))]",
                 "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetNameB'))]"
@@ -363,7 +363,7 @@
             "name": "[parameters('networkSecurityGroupNameB')]",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2018-08-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('locationB')]",
             "properties": {
                 "securityRules": "[parameters('networkSecurityGroupRulesB')]"
             },
@@ -376,7 +376,7 @@
             "name": "[parameters('virtualMachineNameB')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2018-06-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('locationB')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceNameB'))]",
                 "[concat('Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageAccountNameB'))]"
@@ -427,7 +427,7 @@
             "name": "[variables('diagnosticsStorageAccountNameB')]",
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2018-02-01",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('locationB')]",
             "properties": {},
             "kind": "[parameters('diagnosticsStorageAccountKind')]",
             "sku": {
