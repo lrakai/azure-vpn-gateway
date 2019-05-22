@@ -178,12 +178,11 @@
                 "Microsoft.Network/networkInterfaces",
                 "Microsoft.Network/virtualNetworkGateways",
                 "Microsoft.Network/vpnGateways/vpnConnections",
-                "Microsoft.Compute/virtualMachines",
-                "Microsoft.Storage/storageAccounts",
-                "Microsoft.Compute/virtualMachines",
                 "Microsoft.Network/publicIpAddresses",
+                "Microsoft.Compute/virtualMachines",
                 "Microsoft.Compute/virtualMachines/extensions",
-                "Microsoft.Compute/disks"
+                "Microsoft.Compute/disks",
+                "Microsoft.Storage/storageAccounts"
             ]
         },
         "allowedVNetGatewaySkus": {
