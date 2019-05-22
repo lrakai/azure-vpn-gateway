@@ -10,7 +10,11 @@
             "type": "string",
             "defaultValue": "Standard_LRS"
         },
-        "vnetname": {
+        "location": {
+            "type": "string",
+            "defaultValue": "uswest"
+        },
+        "vnetName": {
             "type": "string",
             "defaultValue": "cloudacademynet"
         },
@@ -20,7 +24,7 @@
         },
         "subnetName": {
             "type": "string",
-            "defaultValue": "default"
+            "defaultValue": "dev"
         },
         "subnetAddressPrefix": {
             "type": "string",
@@ -30,9 +34,61 @@
             "type": "bool",
             "defaultValue": false
         },
-        "vnetnameB": {
+        "virtualMachineName": {
+            "type": "string",
+            "defaultValue": "dev"
+        },
+        "networkInterfaceName": {
+            "type": "string",
+            "defaultValue": "dev"
+        },
+        "networkSecurityGroupName": {
+            "type": "string",
+            "defaultValue": "dev"
+        },
+        "networkSecurityGroupRules": {
+            "type": "array",
+            "defaultValue": []
+        },
+        "diagnosticsStorageAccountName": {
+            "type": "string",
+            "defaultValue": "devdiag"
+        },
+        "diagnosticsStorageAccountType": {
+            "type": "string",
+            "defaultValue": "Standard_LRS"
+        },
+        "diagnosticsStorageAccountKind": {
+            "type": "string",
+            "defaultValue": "Storage"
+        },
+        "osDiskType": {
+            "type": "string",
+            "defaultValue": "StandardSSD_LRS"
+        },
+        "virtualMachineSize": {
+            "type": "string",
+            "defaultValue": "Standard_B1s"
+        },
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "student"
+        },
+        "adminPassword": {
+            "type": "string",
+            "defaultValue": "1Cloud_Academy_Labs!"
+        },
+        "locationB": {
+            "type": "string",
+            "defaultValue": "useast"
+        },
+        "vnetNameB": {
             "type": "string",
             "defaultValue": "Fabrikam"
+        },
+        "subnetNameB": {
+            "type": "string",
+            "defaultValue": "internal"
         },
         "addressPrefixB": {
             "type": "string",
@@ -41,10 +97,61 @@
         "subnetAddressPrefixB": {
             "type": "string",
             "defaultValue": "172.16.129.0/24"
+        },
+        "virtualMachineNameB": {
+            "type": "string",
+            "defaultValue": "fabrikam-web"
+        },
+        "networkInterfaceNameB": {
+            "type": "string",
+            "defaultValue": "fabrikam-web"
+        },
+        "networkSecurityGroupNameB": {
+            "type": "string",
+            "defaultValue": "fabrikam-web"
+        },
+        "networkSecurityGroupRulesB": {
+            "type": "array",
+            "defaultValue": [
+                {
+                    "name": "default-allow-http",
+                    "properties": {
+                        "priority": 1000,
+                        "protocol": "TCP",
+                        "access": "Allow",
+                        "direction": "Inbound",
+                        "sourceApplicationSecurityGroups": [],
+                        "destinationApplicationSecurityGroups": [],
+                        "sourceAddressPrefixes": [
+                            "10.1.0.0/16",
+                            "172.16.128.0/17"
+                        ],
+                        "sourcePortRange": "*",
+                        "destinationAddressPrefixes": [
+                            "10.1.0.0/16",
+                            "172.16.128.0/17"
+                        ],
+                        "destinationPortRange": "80"
+                    }
+                }
+            ]
+        },
+        "diagnosticsStorageAccountNameB": {
+            "type": "string",
+            "defaultValue": "fabdiag"
         }
     },
     "variables": {
-        "cloudShellStorageAccountName": "[toLower(replace(concat(parameters('cloudShellStorageAccount'), resourceGroup().name),'-', ''))]"
+        "cloudShellStorageAccountName": "[toLower(replace(concat(parameters('cloudShellStorageAccount'), resourceGroup().name),'-', ''))]",
+        "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+        "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
+        "diagnosticsStorageAccountName": "[replace(concat(parameters('diagnosticsStorageAccountName'), resourceGroup().name), '-', '')]",
+        "nsgIdB": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupNameB'))]",
+        "vnetIdB": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('vnetNameB'))]",
+        "subnetRefB": "[concat(variables('vnetIdB'), '/subnets/', parameters('subnetNameB'))]",
+        "diagnosticsStorageAccountNameB": "[replace(concat(parameters('diagnosticsStorageAccountNameB'), resourceGroup().name), '-', '')]"
+    
     },
     "resources": [
         {
@@ -61,9 +168,9 @@
         },
         {
             "apiVersion": "2019-02-01",
-            "name": "[parameters('vnetname')]",
+            "name": "[parameters('vnetName')]",
             "type": "Microsoft.Network/virtualNetworks",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
@@ -81,14 +188,125 @@
                 "enableDdosProtection": "[parameters('enableDdosProtection')]"
             },
             "tags": {
-                "Environment": "Lab"
+                "Environment": "Lab",
+                "Organizaiton": "Cloud Academy Labs"
+            }
+        },
+        {
+            "name": "[parameters('networkInterfaceName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-04-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "10.1.0.100"
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[variables('nsgId')]"
+                }
+            },
+            "tags": {
+                "Environment": "Lab",
+                "Organizaiton": "Cloud Academy Labs"
+            }
+        },
+        {
+            "name": "[parameters('networkSecurityGroupName')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-08-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": "[parameters('networkSecurityGroupRules')]"
+            },
+            "tags": {
+                "Environment": "Lab",
+                "Organizaiton": "Cloud Academy Labs"
+            }
+        },
+        {
+            "name": "[parameters('virtualMachineName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-04-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageAccountName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('osDiskType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "OpenLogic",
+                        "offer": "CentOS",
+                        "sku": "7.5",
+                        "version": "latest"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]"
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', variables('diagnosticsStorageAccountName'), '.blob.core.windows.net/')]"
+                    }
+                }
+            },
+            "tags": {
+                "Environment": "Lab",
+                "Organizaiton": "Cloud Academy Labs"
+            }
+        },
+        {
+            "name": "[variables('diagnosticsStorageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-02-01",
+            "location": "[resourceGroup().location]",
+            "properties": {},
+            "kind": "[parameters('diagnosticsStorageAccountKind')]",
+            "sku": {
+                "name": "[parameters('diagnosticsStorageAccountType')]"
+            },
+            "tags": {
+                "Environment": "Lab",
+                "Organizaiton": "Cloud Academy Labs"
             }
         },
         {
             "apiVersion": "2019-02-01",
-            "name": "[parameters('vnetnameB')]",
+            "name": "[parameters('vnetNameB')]",
             "type": "Microsoft.Network/virtualNetworks",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('locationB')]",
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
@@ -97,7 +315,7 @@
                 },
                 "subnets": [
                     {
-                        "name": "[parameters('subnetName')]",
+                        "name": "[parameters('subnetNameB')]",
                         "properties": {
                             "addressPrefix": "[parameters('subnetAddressPrefixB')]"
                         }
@@ -106,8 +324,125 @@
                 "enableDdosProtection": "[parameters('enableDdosProtection')]"
             },
             "tags": {
-                "Environment": "Lab"
+                "Environment": "Lab",
+                "Organizaiton": "Fabrikam"
+            }
+        },
+        {
+            "name": "[parameters('networkInterfaceNameB')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-10-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupNameB'))]",
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetNameB'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRefB')]"
+                            },
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "172.16.129.128"
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[variables('nsgIdB')]"
+                }
+            },
+            "tags": {
+                "Environment": "Lab",
+                "Organizaiton": "Fabrikam"
+            }
+        },
+        {
+            "name": "[parameters('networkSecurityGroupNameB')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2018-08-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": "[parameters('networkSecurityGroupRulesB')]"
+            },
+            "tags": {
+                "Environment": "Lab",
+                "Organizaiton": "Fabrikam"
+            }
+        },
+        {
+            "name": "[parameters('virtualMachineNameB')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-06-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceNameB'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', variables('diagnosticsStorageAccountNameB'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('osDiskType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "OpenLogic",
+                        "offer": "CentOS",
+                        "sku": "7.5",
+                        "version": "latest"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceNameB'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineNameB')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]"
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', variables('diagnosticsStorageAccountNameB'), '.blob.core.windows.net/')]"
+                    }
+                }
+            },
+            "tags": {
+                "Environment": "Lab",
+                "Organizaiton": "Fabrikam"
+            }
+        },
+        {
+            "name": "[variables('diagnosticsStorageAccountNameB')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-02-01",
+            "location": "[resourceGroup().location]",
+            "properties": {},
+            "kind": "[parameters('diagnosticsStorageAccountKind')]",
+            "sku": {
+                "name": "[parameters('diagnosticsStorageAccountType')]"
+            },
+            "tags": {
+                "Environment": "Lab",
+                "Organizaiton": "Fabrikam"
             }
         }
-    ]
+    ],
+    "outputs": {
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('adminUsername')]"
+        }
+    }
 }

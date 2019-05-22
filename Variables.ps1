@@ -1,4 +1,4 @@
-$Lab="vpn-gw"
+$Lab="vnet-to-vnet"
 $Region="WestUS"
 $User="student-lab-01@labscloudacademy.onmicrosoft.com"
 $Pass="labAccount1"
