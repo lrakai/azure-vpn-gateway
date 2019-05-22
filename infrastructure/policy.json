@@ -207,7 +207,7 @@
         },
         "disallowedActions": {
             "value": [
-                "Microsoft.Compute/virtualMachines/write"
+                "Microsoft.Network/expressRouteGateways/expressRouteConnections/write"
             ]
         }
     }
