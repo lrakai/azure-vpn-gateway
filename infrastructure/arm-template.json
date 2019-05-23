@@ -196,7 +196,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Cloud Academy Labs"
+                "Organization": "Cloud Academy Labs"
             }
         },
         {
@@ -227,7 +227,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Cloud Academy Labs"
+                "Organization": "Cloud Academy Labs"
             }
         },
         {
@@ -240,7 +240,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Cloud Academy Labs"
+                "Organization": "Cloud Academy Labs"
             }
         },
         {
@@ -291,7 +291,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Cloud Academy Labs"
+                "Organization": "Cloud Academy Labs"
             }
         },
         {
@@ -306,7 +306,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Cloud Academy Labs"
+                "Organization": "Cloud Academy Labs"
             }
         },
         {
@@ -332,7 +332,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Fabrikam"
+                "Organization": "Fabrikam"
             }
         },
         {
@@ -363,7 +363,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Fabrikam"
+                "Organization": "Fabrikam"
             }
         },
         {
@@ -376,7 +376,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Fabrikam"
+                "Organization": "Fabrikam"
             }
         },
         {
@@ -428,7 +428,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Fabrikam"
+                "Organization": "Fabrikam"
             }
         },
         {
@@ -443,7 +443,7 @@
             },
             "tags": {
                 "Environment": "Lab",
-                "Organizaiton": "Fabrikam"
+                "Organization": "Fabrikam"
             }
         }
     ],
