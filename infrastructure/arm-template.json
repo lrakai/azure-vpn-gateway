@@ -139,6 +139,13 @@
         "diagnosticsStorageAccountNameB": {
             "type": "string",
             "defaultValue": "fabdiag"
+        },
+        "cloudInitScriptBase64": {
+            "type": "string",
+            "metadata": {
+                "description": "Base-64 encoding of the cloud-init.yaml file"
+            },
+            "defaultValue": "I2Nsb3VkLWNvbmZpZwpwYWNrYWdlX3VwZ3JhZGU6IHRydWUKcGFja2FnZXM6CiAgLSBuZ2lueAogIC0gbm9kZWpzCiAgLSBucG0Kd3JpdGVfZmlsZXM6CiAgLSBvd25lcjogd3d3LWRhdGE6d3d3LWRhdGEKICAgIHBhdGg6IC9ldGMvbmdpbngvc2l0ZXMtYXZhaWxhYmxlL2RlZmF1bHQKICAgIGNvbnRlbnQ6IHwKICAgICAgc2VydmVyIHsKICAgICAgICBsaXN0ZW4gODA7CiAgICAgICAgbG9jYXRpb24gLyB7CiAgICAgICAgICBwcm94eV9wYXNzIGh0dHA6Ly9sb2NhbGhvc3Q6MzAwMDsKICAgICAgICAgIHByb3h5X2h0dHBfdmVyc2lvbiAxLjE7CiAgICAgICAgICBwcm94eV9zZXRfaGVhZGVyIFVwZ3JhZGUgJGh0dHBfdXBncmFkZTsKICAgICAgICAgIHByb3h5X3NldF9oZWFkZXIgQ29ubmVjdGlvbiBrZWVwLWFsaXZlOwogICAgICAgICAgcHJveHlfc2V0X2hlYWRlciBIb3N0ICRob3N0OwogICAgICAgICAgcHJveHlfY2FjaGVfYnlwYXNzICRodHRwX3VwZ3JhZGU7CiAgICAgICAgfQogICAgICB9CiAgLSBvd25lcjogc3R1ZGVudDpzdHVkZW50CiAgICBwYXRoOiAvaG9tZS9zdHVkZW50L215YXBwL2luZGV4LmpzCiAgICBjb250ZW50OiB8CiAgICAgIHZhciBleHByZXNzID0gcmVxdWlyZSgnZXhwcmVzcycpCiAgICAgIHZhciBhcHAgPSBleHByZXNzKCkKICAgICAgdmFyIG9zID0gcmVxdWlyZSgnb3MnKTsKICAgICAgYXBwLmdldCgnLycsIGZ1bmN0aW9uIChyZXEsIHJlcykgewogICAgICAgIHJlcy5zZW5kKCdDb25uZWN0ZWQgdG8gRmFicmlrYW0hJykKICAgICAgfSkKICAgICAgYXBwLmxpc3RlbigzMDAwLCBmdW5jdGlvbiAoKSB7CiAgICAgICAgY29uc29sZS5sb2coJ0hlbGxvIHdvcmxkIGFwcCBsaXN0ZW5pbmcgb24gcG9ydCAzMDAwIScpCiAgICAgIH0pCnJ1bmNtZDoKICAtIHNlcnZpY2UgbmdpbnggcmVzdGFydAogIC0gY2QgIi9ob21lL3N0dWRlbnQvbXlhcHAiCiAgLSBucG0gaW5pdAogIC0gbnBtIGluc3RhbGwgZXhwcmVzcyAteQogIC0gbm9kZWpzIGluZGV4Lmpz"
         }
     },
     "variables": {
@@ -257,9 +264,9 @@
                         }
                     },
                     "imageReference": {
-                        "publisher": "OpenLogic",
-                        "offer": "CentOS",
-                        "sku": "7.5",
+                        "publisher": "Canonical",
+                        "offer": "UbuntuServer",
+                        "sku": "18.04-LTS",
                         "version": "latest"
                     }
                 },
@@ -273,7 +280,8 @@
                 "osProfile": {
                     "computerName": "[parameters('virtualMachineName')]",
                     "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "customData": "[parameters('cloudInitScriptBase64')]"
                 },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
