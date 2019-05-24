@@ -177,7 +177,7 @@
                 "Microsoft.Network/networkSecurityGroups",
                 "Microsoft.Network/networkInterfaces",
                 "Microsoft.Network/virtualNetworkGateways",
-                "Microsoft.Network/vpnGateways/vpnConnections",
+                "Microsoft.Network/connections",
                 "Microsoft.Network/publicIpAddresses",
                 "Microsoft.Compute/virtualMachines",
                 "Microsoft.Compute/virtualMachines/extensions",
